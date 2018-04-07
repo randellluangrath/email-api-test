@@ -1,3 +1,3 @@
 # email-api-test
 
-Twilio API created in C#, ASP.NET MVC to make and receive phone calls 
+Twilio API created in C#, ASP.NET MVC for outbound/inbound calls
