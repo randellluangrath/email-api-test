@@ -47,6 +47,17 @@ namespace email_api_test.Controllers
             return Content(call.Sid);
         }
 
+        [HttpPost]
+        public ActionResult ReceiveCall()
+        {
+            var response = new VoiceResponse();
+            response.Say("Hello");
+
+            return TwiML(response);
+        }
+
+
+
 
     }
 }
