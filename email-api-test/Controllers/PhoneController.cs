@@ -33,56 +33,44 @@ namespace email_api_test.Controllers
 
             var to = new PhoneNumber(_configurationUtility.MyPhoneNumber);
             var from = _configurationUtility.TwilioNumber;
-            var statusCallbackEvents = new List<string>() {
-            "initiated",
-            "ringing",
-            "answered",
-            "completed" };
 
             var call = CallResource.Create(
                  to: to,
                  from: from,
-                 url: new Uri("http://demo.twilio.com/docs/voice.xml"),
-                 method: new HttpMethod("GET"),
-                 statusCallback: new Uri("https://b2e2d611.ngrok.io/phone/callback"),
-                 statusCallbackMethod: new HttpMethod("POST"),
-                 statusCallbackEvent: statusCallbackEvents);
+                 url: new Uri("http://demo.twilio.com/docs/voice.xml"));
+
 
             return Content(call.Sid);
         }
 
         [HttpPost]
-        public ActionResult ReceiveCall(Event resource)
+        public ActionResult ReceiveCall(Callback cb)
         {
+            Response.ContentType = "text/xml";
 
             var accountSid = _configurationUtility.TwilioAccountSid;
             var authToken = _configurationUtility.TwilioAuthToken;
 
             TwilioClient.Init(accountSid, authToken);
 
-            LogRequest(resource);
+            LogRequest(cb);
 
             var response = new VoiceResponse();
-            response.Say($"What's poppin {resource.CallerName}, you're calling from {resource.FromCity}, {resource.CalledState}.");
+            response.Say("Hi");
 
             return TwiML(response);
 
         }
 
-        [HttpPost]
-        public void Callback(Event resource)
+        private void LogRequest(Callback callback)
         {
-            LogRequest(resource);
-        }
-
-        private void LogRequest(Event evt)
-        {
-            PropertyInfo[] properties = evt.GetType().GetProperties();
-            foreach (PropertyInfo item in properties)
+            PropertyInfo[] properties = callback.GetType().GetProperties();
+            foreach (PropertyInfo cb in properties)
             {
-                Logger.Info($"{item}: {item.GetValue(evt)}");
+                Logger.Info($"{cb}: {cb.GetValue(callback)}");
             }
         }
+
 
     }
 }
