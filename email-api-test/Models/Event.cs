@@ -33,7 +33,6 @@ namespace email_api_test.Models
         public string CalledState { get; set; }
         public string FromZip { get; set; }
         public string FromState { get; set; }
-        public string CallerName { get; set; }
     }
 
 }
