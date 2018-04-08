@@ -38,4 +38,3 @@ namespace email_api_test.Logging
         }
     }
 }
-}
