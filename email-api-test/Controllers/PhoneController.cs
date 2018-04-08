@@ -44,15 +44,16 @@ namespace email_api_test.Controllers
         }
 
         [HttpPost]
-        public ActionResult ReceiveCall(Resource rsc)
+        public ActionResult ReceiveCall(Callback cb)
         {
+            Response.ContentType = "text/xml";
+
             var accountSid = _configurationUtility.TwilioAccountSid;
             var authToken = _configurationUtility.TwilioAuthToken;
 
             TwilioClient.Init(accountSid, authToken);
 
-            var resource = CallResource.Fetch(rsc.CallSid);
-            LogRequest(resource);
+            LogRequest(cb);
 
             var response = new VoiceResponse();
             response.Say("Hi");
@@ -61,12 +62,12 @@ namespace email_api_test.Controllers
 
         }
 
-        private void LogRequest(CallResource resource)
+        private void LogRequest(Callback callback)
         {
-            PropertyInfo[] properties = resource.GetType().GetProperties();
-            foreach (PropertyInfo rsc in properties)
+            PropertyInfo[] properties = callback.GetType().GetProperties();
+            foreach (PropertyInfo cb in properties)
             {
-                Logger.Info($"{rsc}: {rsc.GetValue(resource)}");
+                Logger.Info($"{cb}: {cb.GetValue(callback)}");
             }
         }
 
