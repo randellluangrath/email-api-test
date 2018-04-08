@@ -10,24 +10,30 @@ using Twilio.Types;
 using Twilio.TwiML;
 using Twilio.AspNet.Mvc;
 using email_api_test.Utilities;
+using email_api_test.Models;
 
 namespace email_api_test.Controllers
 {
     public class PhoneController : TwilioController
-    {   
+    {
+
+        private readonly IConfigurationUtility _configurationUtility;
+
+        public PhoneController(IConfigurationUtility config)
+        {
+            _configurationUtility = config;
+        }
 
         public ActionResult MakeCall()
         {
 
-            var x = new ConfigurationUtility();
-
-            var accountSid = x.TwilioAccountSid;
-            var authToken = x.TwilioAuthToken;
+            var accountSid = _configurationUtility.TwilioAccountSid;
+            var authToken = _configurationUtility.TwilioAuthToken;
 
             TwilioClient.Init(accountSid, authToken);
 
-            var to = new PhoneNumber(x.MyPhoneNumber);
-            var from = x.TwilioNumber;
+            var to = new PhoneNumber(_configurationUtility.MyPhoneNumber);
+            var from = _configurationUtility.TwilioNumber;
 
             var call = CallResource.Create(
                 to: to,

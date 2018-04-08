@@ -1,10 +1,10 @@
 ﻿namespace email_api_test.Utilities
 {
-    public class IConfigurationUtility
+    public interface IConfigurationUtility
     {
         string TwilioAccountSid { get;  }
         string TwilioAuthToken { get; }
-        string Twilio { get;  }
+        string TwilioNumber { get;  }
         string MyPhoneNumber { get;  }
     }
 }
