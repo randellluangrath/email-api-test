@@ -24,7 +24,7 @@ namespace email_api_test.Controllers
             _configurationUtility = config;
         }
         
-        public ActionResult MakeCall()
+        public ActionResult MakeCall(Event rsc)
         {
             var accountSid = _configurationUtility.TwilioAccountSid;
             var authToken = _configurationUtility.TwilioAuthToken;
@@ -33,44 +33,57 @@ namespace email_api_test.Controllers
 
             var to = new PhoneNumber(_configurationUtility.MyPhoneNumber);
             var from = _configurationUtility.TwilioNumber;
+            var statusCallbackEvents = new List<string>() {
+            "initiated",
+            "ringing",
+            "answered",
+            "completed" };
 
             var call = CallResource.Create(
                  to: to,
                  from: from,
-                 url: new Uri("http://demo.twilio.com/docs/voice.xml"));
+                 url: new Uri("http://demo.twilio.com/docs/voice.xml"),
+                 method: new HttpMethod("GET"),
+                 statusCallback: new Uri("https://b2e2d611.ngrok.io/phone/callback"),
+                 statusCallbackMethod: new HttpMethod("POST"),
+                 statusCallbackEvent: statusCallbackEvents);
 
 
             return Content(call.Sid);
         }
 
         [HttpPost]
-        public ActionResult ReceiveCall(Callback cb)
+        public ActionResult ReceiveCall(Event resource)
         {
-            Response.ContentType = "text/xml";
 
             var accountSid = _configurationUtility.TwilioAccountSid;
             var authToken = _configurationUtility.TwilioAuthToken;
 
             TwilioClient.Init(accountSid, authToken);
 
-            LogRequest(cb);
+            LogRequest(resource);
 
             var response = new VoiceResponse();
-            response.Say("Hi");
+            response.Say($"What's poppin, you're calling from {resource.FromCity}, {resource.CalledState}.");
 
             return TwiML(response);
 
         }
 
-        private void LogRequest(Callback callback)
+        [HttpPost]
+        public void Callback(Event resource)
         {
-            PropertyInfo[] properties = callback.GetType().GetProperties();
-            foreach (PropertyInfo cb in properties)
-            {
-                Logger.Info($"{cb}: {cb.GetValue(callback)}");
-            }
+            LogRequest(resource);
         }
 
+        private void LogRequest(Event evt)
+        {
+            PropertyInfo[] properties = evt.GetType().GetProperties();
+            foreach (PropertyInfo e in properties)
+            {
+                Logger.Info($"{e}: {e.GetValue(evt)}");
+            }
+        }
 
     }
 }

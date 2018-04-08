@@ -1,7 +1,7 @@
 ﻿
 namespace email_api_test.Models
 {
-    public class Callback
+    public class Event
     {
         public string Called { get; set; }
         public string ToState { get; set; }
