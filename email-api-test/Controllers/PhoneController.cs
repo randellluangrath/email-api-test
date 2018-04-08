@@ -63,7 +63,7 @@ namespace email_api_test.Controllers
             LogRequest(resource);
 
             var response = new VoiceResponse();
-            response.Say($"What's poppin {resource.CallerName}, you're calling from {resource.FromCity}, {resource.CalledState}.");
+            response.Say($"What's poppin, you're calling from {resource.FromCity}, {resource.CalledState}.");
 
             return TwiML(response);
 
