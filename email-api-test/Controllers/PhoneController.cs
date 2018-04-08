@@ -44,7 +44,7 @@ namespace email_api_test.Controllers
                  from: from,
                  url: new Uri("http://demo.twilio.com/docs/voice.xml"),
                  method: new HttpMethod("GET"),
-                 statusCallback: new Uri("https://b2e2d611.ngrok.io/phone/callback"),
+                 statusCallback: new Uri("http://raise.us-west-2.elasticbeanstalk.com/phone/callback"),
                  statusCallbackMethod: new HttpMethod("POST"),
                  statusCallbackEvent: statusCallbackEvents);
 
