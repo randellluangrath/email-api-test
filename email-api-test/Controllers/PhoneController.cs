@@ -24,7 +24,7 @@ namespace email_api_test.Controllers
             _configurationUtility = config;
         }
         
-        public ActionResult MakeCall(Event rsc)
+        public ActionResult MakeCall()
         {
             var accountSid = _configurationUtility.TwilioAccountSid;
             var authToken = _configurationUtility.TwilioAuthToken;
@@ -48,7 +48,6 @@ namespace email_api_test.Controllers
                  statusCallbackMethod: new HttpMethod("POST"),
                  statusCallbackEvent: statusCallbackEvents);
 
-
             return Content(call.Sid);
         }
 
@@ -64,7 +63,7 @@ namespace email_api_test.Controllers
             LogRequest(resource);
 
             var response = new VoiceResponse();
-            response.Say($"What's poppin, you're calling from {resource.FromCity}, {resource.CalledState}.");
+            response.Say($"What's poppin {resource.CallerName}, you're calling from {resource.FromCity}, {resource.CalledState}.");
 
             return TwiML(response);
 
@@ -79,9 +78,9 @@ namespace email_api_test.Controllers
         private void LogRequest(Event evt)
         {
             PropertyInfo[] properties = evt.GetType().GetProperties();
-            foreach (PropertyInfo e in properties)
+            foreach (PropertyInfo item in properties)
             {
-                Logger.Info($"{e}: {e.GetValue(evt)}");
+                Logger.Info($"{item}: {item.GetValue(evt)}");
             }
         }
 
