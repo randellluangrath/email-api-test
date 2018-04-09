@@ -66,7 +66,6 @@ namespace email_api_test.Controllers
             response.Say($"What's poppin, you're calling from {resource.FromCity}, {resource.CalledState}.");
 
             return TwiML(response);
-
         }
 
         [HttpPost]
